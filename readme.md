@@ -1,5 +1,4 @@
-Задание 1  
-
+Задание 1
 !()[]
 ============================================================ 
 
@@ -8,47 +7,47 @@
 параметры для добавления групп безопасности и размера диска посмотреть тут 
 https://terraform-provider.yandexcloud.net/DataSources/datasource_compute_instance#example-usage
 
-1)  
+1)
 для машин с именем 1 и 2 ( а не 0  и 1 ) используем конструкцию
   name        = "${var.default_vm.standart.vm_name}-${count.index + 1}"
-  
-добавление в группу безопасности :  
+
+добавление в группу безопасности :
 ...
   network_interface {
     security_group_ids = [
     yandex_vpc_security_group.example.id,
   ]
  }
-...  
-2)  
-попросили создать переменную с данными для ВМ list а с ним for each loop не сработает. переводим в карту.  для себя for vm in var.each_vm: Это конструкция цикла for, которая перебирает каждый элемент в списке var.each_vm. Переменная vm будет представлять текущий объект на каждой итерации.  
-  
-для создания после вм из пункта 1 используем   
-depends_on = [yandex_compute_instance.web]  
-  
-для размера дисков используем параметр size в  
-...  
-  boot_disk {  
-    initialize_params {  
-      ...  
-      size        = each.value.disk_volume  
-    }  
-...  
-  
-  
-для добавления ключа через file  
-сначала ( потому что мы не можем использовать конструкцию file("~/.ssh/ycbarmaq.pub") в обьявлении переменной )  
-locals {  
-  ssh_key = file("~/.ssh/ycbarmaq.pub")  
-}  
-  
-потом вызываем уже его  
-...  
-  metadata = {  
-    serial-port-enable = var.default_vm.standart.serial-port-enable  
-    ssh-keys           = "ubuntu:${local.ssh_key}"  
-  }  
-...  
+...
+2)
+попросили создать переменную с данными для ВМ list а с ним for each loop не сработает. переводим в карту.  для себя for vm in var.each_vm: Это конструкция цикла for, которая перебирает каждый элемент в списке var.each_vm. Переменная vm будет представлять текущий объект на каждой итерации.
+
+для создания после вм из пункта 1 используем 
+depends_on = [yandex_compute_instance.web]
+
+для размера дисков используем параметр size в 
+...
+  boot_disk {
+    initialize_params {
+      ...
+      size        = each.value.disk_volume
+    }
+...
+
+
+для добавления ключа через file
+сначала ( потому что мы не можем использовать конструкцию file("~/.ssh/ycbarmaq.pub") в обьявлении переменной )
+locals {
+  ssh_key = file("~/.ssh/ycbarmaq.pub")
+}
+
+потом вызываем уже его
+...
+  metadata = {
+    serial-port-enable = var.default_vm.standart.serial-port-enable
+    ssh-keys           = "ubuntu:${local.ssh_key}"
+  }
+...
 
 ============================================================ 
 
