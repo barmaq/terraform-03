@@ -1,3 +1,4 @@
+# Переделано
 # output "count" {
 #   value = [
 #     for vm in yandex_compute_instance.web : {
@@ -18,6 +19,7 @@
 #   ]
 # }
 
+# ДОПОЛНЕННОЕ!
 #обьеденил при помощи concat
 output "all_vms" {
   value = concat(
@@ -31,5 +33,20 @@ output "all_vms" {
       id   = vm.id
       fqdn = vm.fqdn
     }]
+  )
+}
+
+
+# тут дебаггинг для локальной переменной storage
+output "instance_created" {
+    value = try(
+    # Если yandex_compute_instance.storage несколько инстансов (проверяем по индексу)
+    { 
+      for idx, instance in yandex_compute_instance.storage : 
+      instance.name => {
+        counter = idx
+      }
+    },
+    "no index!"   
   )
 }
